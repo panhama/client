@@ -2,14 +2,11 @@ import axios, { Axios, AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Routes } from "../router/Routes";
 
-const sleep = () => new Promise(resolve => setTimeout(resolve, 200));
-
 axios.defaults.baseURL = "http://localhost:5062/api/";
 axios.defaults.withCredentials = true;
 const responseBody = (response : AxiosResponse) => response.data;
 
 axios.interceptors.response.use(async response => {
-    // await sleep();
     return response
 },(error: AxiosError)=>{ const {data, status} = error.response as AxiosResponse;
    switch (status) {
@@ -45,7 +42,7 @@ const requests = {
 
 const Catalog = {
     list: ()=> requests.get('products'),
-    details:(productId: number) => requests.get(`products/${productId}`)
+    details: (productId: number) => requests.get(`products/${productId}`)
 }
 
 const TestErrors = {

@@ -1,5 +1,4 @@
 import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
-// import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import agent from "../../app/api/agent";
@@ -12,21 +11,13 @@ export default function ProductDetails() {
     const {productId} = useParams<{productId: string}>();
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, SetLoading] = useState(true);
-    
-    // useEffect(()=> {
-    //     axios.get(`http://localhost:5062/api/products/${productId}`)
-    //     .then(response => {setProduct(response.data)})
-    //     .catch(error => console.log(error))
-    //     .finally(() => SetLoading(false));
-    // },[productId])
-
     useEffect(()=> {
         productId && agent.Catalog.details(parseInt(productId))
         .then(response => {setProduct(response)})
         .catch(error => console.log(error.response))
         .finally(() => SetLoading(false));
     },[productId])
-    if (loading) return <> <LoadingComponent message="looading " /> </>
+    if (loading) return <> <LoadingComponent message="looading "/> </>
 
     if (!product) return  <> <NotFound/> </>
     
@@ -69,3 +60,13 @@ export default function ProductDetails() {
        </Grid>
     )
 }
+
+
+//old code  
+// import axios from "axios";
+    // useEffect(()=> {
+    //     axios.get(`http://localhost:5062/api/products/${productId}`)
+    //     .then(response => {setProduct(response.data)})
+    //     .catch(error => console.log(error))
+    //     .finally(() => SetLoading(false));
+    // },[productId])
