@@ -1,6 +1,6 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { AppBar, Badge, Box, IconButton, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const midLinks = [{ name: "Catalog", path: "/catalog"},
                 {name: "About", path: "/about"},
@@ -39,7 +39,7 @@ export default function Header({mode,handleToggle}:any) {
                             {name.toUpperCase()}
                         </ListItem>
                     ))}
-                    <IconButton sx={{ml:2}} color="inherit" aria-label="menu" edge="start"> <Badge badgeContent="4" color="secondary"> <ShoppingCart/> </Badge>
+                    <IconButton component={Link} to="/basket"  sx={{ml:2}} color="inherit" aria-label="menu" edge="start"> <Badge badgeContent="4" color="secondary"> <ShoppingCart/> </Badge>
                     </IconButton>   
                     </List>
                     </Box>
