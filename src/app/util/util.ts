@@ -1,11 +1,8 @@
-export function getCookie(name: string) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.startsWith(name + '=')) {
-        return cookie.substring(name.length + 1, cookie.length);
-      }
-    }
-    return null;
-  }
-  
+export function getCookie(key: string) {
+  var b = document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
+  return b ? b.pop() : "";
+}
+
+export function currencyFormat(amount: number) {
+   return "$" + (amount/100).toFixed(2);
+}

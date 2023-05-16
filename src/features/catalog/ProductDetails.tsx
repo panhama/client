@@ -9,17 +9,17 @@ import useStoreContext from "../../app/context/StoreContext";
 import { LoadingButton } from "@mui/lab";
 
 export default function ProductDetails() {
-    const {basket, setBasket} = useStoreContext();
+    const {basket, setBasket, removeItem} = useStoreContext();
     const {productId} = useParams<{productId: string}>();
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, SetLoading] = useState(true);
     const [quantity, setQuantity] = useState(0);
     const [submit, setSubmit] = useState(false);
     
-    const item = basket?.items.find(i => i.productId === product?.id);
+    const item = basket && basket.items && basket?.items.find(i => i.productId === product?.id);
 
     function handleInputChange(event: any) {
-        if (event.target.value > 0){
+        if (event.target.value >= 0){
             setQuantity(parseInt(event.target.value));
         }
     }
@@ -30,9 +30,13 @@ export default function ProductDetails() {
             agent.Basket.addItem(product?.id!, updateQuantity)
             .then(basket => setBasket(basket))
             .catch(error => console.log(error))
-            .finally(()=> SetLoading(false))
+            .finally(()=> setSubmit(false))
         } else {
-            
+            const updateQuantity = item.quantity - quantity;
+            agent.Basket.removeItem(product?.id!, updateQuantity)
+            .then(()=> removeItem(product?.id!, updateQuantity))
+            .catch(err => console.log(err))
+            .finally(()=>setSubmit(false) )
         }
     }
     useEffect(()=> {
@@ -41,7 +45,7 @@ export default function ProductDetails() {
         .then(response => {setProduct(response)})
         .catch(error => console.log(error.response))
         .finally(() => SetLoading(false));
-    },[productId, item, setBasket])
+    },[productId,])
     if (loading) return <> <LoadingComponent message="loading "/> </>
 
     if (!product) return  <> <NotFound/> </>
@@ -83,10 +87,10 @@ export default function ProductDetails() {
         </TableContainer>
         <Grid container spacing={2}>
         <Grid item xs={6}>
-            <TextField variant="outlined" type="number" label=" quanity in cart" fullWidth value={quantity} onChange={handleInputChange}  />
+            <TextField  variant="outlined" type="number" label=" quanity in cart" fullWidth value={quantity} onChange={handleInputChange}  />
         </Grid>
         <Grid item xs={6}>
-            <LoadingButton sx={{height: '55px'}} color="primary" size='large' variant="contained" fullWidth onClick={handleUpdate}> {item ? "update quanitity": "add to card" }</LoadingButton>
+            <LoadingButton loading={submit} disabled={item?.quantity === quantity || !item && quantity === 0 } sx={{height: '55px'}} color="primary" size='large' variant="contained" fullWidth onClick={handleUpdate}> {item ? "update quanitity": "add to card" }</LoadingButton>
         </Grid>
         </Grid>
        </Grid>

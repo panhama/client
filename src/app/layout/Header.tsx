@@ -1,12 +1,14 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { AppBar, Badge, Box, IconButton, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
-import useStoreContext from "../context/StoreContext";
+import { useAppSelector } from "../store/ConfigureStore";
 
 const midLinks = [{ name: "Catalog", path: "/catalog"},
                 {name: "About", path: "/about"},
                 {name: "Contact", path: "/contact"}];
 
+const rightLink = [{name:"sign up",path:"/signup"},
+                {name:"sign in",path:"/signin"}];
 const navStyle = {
     color: 'white',
     textDecoration: 'none',
@@ -17,9 +19,10 @@ const navStyle = {
         color: 'text.secondary'
     }
 }                
-export default function Header({mode,handleToggle}:any) {
-    const {basket} = useStoreContext();
-    const itemCount =basket?.items.reduce((sum,item )=> sum + item.quantity, 0);
+export default function Header({mode, handleToggle}:any) {
+    const {basket} = useAppSelector(state => state.basket);
+    // const itemCount = basket?.items.reduce((sum, item)=> sum + item.quantity, 0);
+    const itemCount = basket?.items? basket.items.reduce((sum, item) => sum + item.quantity, 0): 0;    
     return(
         <>
         <AppBar position="static" sx={{mb:4}}>
@@ -36,12 +39,14 @@ export default function Header({mode,handleToggle}:any) {
                         key={name}
                         component={NavLink}
                         to={path}
-                        sx={navStyle}
-                        >
+                        sx={navStyle}>
                             {name.toUpperCase()}
                         </ListItem>
                     ))}
-                    <IconButton component={Link} to="/basket"  sx={{ml:2}} color="inherit" aria-label="menu" edge="start"> <Badge badgeContent={itemCount} color="secondary"> <ShoppingCart/> </Badge>
+                    <IconButton component={Link} to="/basket"  sx={{ml:2}} color="inherit" aria-label="menu" edge="start">
+                         <Badge badgeContent={itemCount} color="secondary"> 
+                            <ShoppingCart/> 
+                         </Badge>
                     </IconButton>   
                     </List>
                     </Box>

@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosError, AxiosResponse } from "axios";
+import axios, {  AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Routes } from "../router/Routes";
 
@@ -8,7 +8,7 @@ const responseBody = (response : AxiosResponse) => response.data;
 
 axios.interceptors.response.use(async response => {
     return response
-},(error: AxiosError)=>{ const {data, status} = error.response as AxiosResponse;
+},(error: AxiosError)=> { const {data, status} = error.response as AxiosResponse;
    switch (status) {
     case 400:
         if(data.error){
